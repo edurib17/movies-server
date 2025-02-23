@@ -84,19 +84,12 @@ public class MovieService {
         existingMovie.setGenre(movieToUpdateDTO.getGenre());
     }
 
-    private void updateCast(Movie movie, List<CastDTO> updatedCastDTOs) {
+ private void updateCast(Movie movie, List<CastDTO> updatedCastDTOs) {
+        movie.getCastList().clear();
         List<Cast> updatedCastList = updatedCastDTOs.stream()
                 .map(this::converToEntity)
                 .peek(cast -> cast.setMovie(movie))
                 .toList();
-
-        List<Cast> castToDelete = movie.getCastList().stream()
-                .filter(cast -> updatedCastList.stream().filter(u -> u.getId() != null)
-                        .noneMatch(updatedCast -> updatedCast.getId().equals(cast.getId())))
-                .collect(Collectors.toList());
-
-        castRepository.deleteAll(castToDelete);
-        movie.getCastList().clear();
         movie.getCastList().addAll(updatedCastList);
     }
 
