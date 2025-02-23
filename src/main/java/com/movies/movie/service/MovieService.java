@@ -97,15 +97,13 @@ public class MovieService {
         repository.deleteById(id);
     }
 
-    public Page<MovieDTO> findAll(int page, int size) {
+      public Page<MovieDTO> findAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Movie> moviesPage = repository.findAll(pageable);
 
-        List<MovieDTO> movieDTOs = moviesPage.getContent().stream()
-                .map(movie -> modelMapper.map(movie, MovieDTO.class))
-                .collect(Collectors.toList());
+        List<MovieDTO> movieDTOS = convertToListEntity(moviesPage.getContent());
 
-        return new PageImpl<>(movieDTOs, pageable, moviesPage.getTotalElements());
+        return new PageImpl<>(movieDTOS, pageable, moviesPage.getTotalElements());
     }
 
 
